@@ -29,248 +29,59 @@
   .btn.secondary{background:#1a2240;color:var(--ink);border:1px solid #2a3560}
   .btn:disabled{opacity:.5;cursor:not-allowed}
   .score{padding:16px}
-  .score h3{margin:0 0 8px;font-size:16px}
-  .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-  .kpi .box{background:#0f1530;border:1px solid #1e2b4d;padding:12px;border-radius:12px}
-  .kpi .big{font-size:28px;font-weight:800}
-  .bar{width:100%;height:8px;border-radius:999px;background:#101831;overflow:hidden;border:1px solid #1f2a4b}
-  .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent) 0%,var(--accent-2) 100%);transition:width .5s ease}
-  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
-  th,td{padding:8px;border-bottom:1px solid #1d2744;text-align:left}
-  th{color:var(--muted);font-weight:600}
-  .mini-pill{font-size:11px;color:#0b1020;background:var(--accent-2);padding:2px 8px;border-radius:999px}
-  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-  .toolbar .field{background:#0f1530;border:1px solid #223159;border-radius:10px;padding:6px 10px;color:var(--ink);display:flex;align-items:center;gap:8px}
-  select,input[type="number"],input[type="checkbox"]{background:transparent;border:none;color:var(--ink);outline:none}
-  .hint{font-size:12px;color:var(--muted)}
   .apps{margin-top:14px;background:#0f1530;border:1px dashed #294;border-radius:12px;padding:12px}
   .apps h4{margin:0 0 6px;font-size:14px}
-  .apps-list{display:grid;gap:8px}
-  .apps-item{display:flex;gap:10px}
-  .apps-item img{width:100px;border:1px solid #223159;border-radius:8px}
-  .apps-item p{margin:0;color:var(--muted);font-size:13px}
+  .apps-list{display:grid;gap:12px}
+  .apps-item{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .apps-item img{width:100%;max-width:500px;border:1px solid #223159;border-radius:12px}
+  .apps-item p{margin:0;color:var(--muted);font-size:14px;text-align:center;max-width:500px}
 </style>
 </head>
 <body>
 <header>
   <h1>🧩 Grasshopper 基礎コンポーネント クイズ — v2 JSON対応</h1>
-  <div class="sub">画像／成績記録／弱点強化モード／キーボード操作／正解後に「使いどころ」提示</div>
 </header>
 <div class="wrap">
-  <section id="quizCard" class="card quiz" aria-live="polite">
-    <div class="q-head">
-      <span class="pill" id="progressPill">Q — / —</span>
-      <span class="pill" id="topicPill">—</span>
-      <span class="pill" id="diffPill">Lv —</span>
-    </div>
-    <div class="toolbar" role="group" aria-label="出題設定">
-      <label class="field">出題数 <input id="qCount" type="number" min="5" max="30" step="1" value="10"/></label>
-      <label class="field">難易度
-        <select id="filterDiff">
-          <option value="all">すべて</option>
-          <option value="1">Lv1</option>
-          <option value="2">Lv2</option>
-          <option value="3">Lv3</option>
-        </select>
-      </label>
-      <label class="field">モード
-        <select id="mode">
-          <option value="normal">通常</option>
-          <option value="weak">弱点強化（正答率の低い順）</option>
-          <option value="shuffle">完全シャッフル</option>
-        </select>
-      </label>
-      <label class="field"><input id="kbHelpToggle" type="checkbox"/> ショートカット表示</label>
-      <button id="applyBtn" class="btn secondary">設定を反映</button>
-    </div>
-    <div id="kbHelp" class="hint" style="display:none">1–9: 選択肢 / N: 次へ / S: スキップ / R: 今回の記録リセット</div>
-
-    <h2 id="qTitle" class="q-title">読み込み中…</h2>
-    <img id="qImg" class="q-img" alt="Component image" src="" onerror="this.style.display='none';" />
+  <section id="quizCard" class="card quiz">
+    <h2 id="qTitle">読み込み中…</h2>
+    <img id="qImg" class="q-img" />
     <div id="choices" class="choices"></div>
     <div id="explain" class="explain"></div>
-
     <div id="apps" class="apps" style="display:none">
       <h4>💡 このコンポーネントの使いどころ</h4>
       <div id="appsList" class="apps-list"></div>
     </div>
-
-    <div class="controls">
-      <button id="nextBtn" class="btn" disabled>次の問題へ</button>
-      <button id="skipBtn" class="btn secondary">スキップ</button>
-    </div>
+    <button id="nextBtn" class="btn">次へ</button>
   </section>
-
-  <aside class="card score">
-    <h3>📊 成績ダッシュボード</h3>
-    <div class="kpi">
-      <div class="box">
-        <div>今回の正解率</div>
-        <div id="sessionAcc" class="big">—</div>
-        <div class="bar"><div id="sessionBar"></div></div>
-      </div>
-      <div class="box">
-        <div>累積の正解率</div>
-        <div id="globalAcc" class="big">—</div>
-        <div class="bar"><div id="globalBar"></div></div>
-      </div>
-    </div>
-    <table id="perItem"><thead><tr><th>コンポーネント</th><th>正解/試行</th><th>率</th></tr></thead><tbody></tbody></table>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <button id="resetSession" class="btn secondary">今回の記録をリセット</button>
-      <button id="resetGlobal" class="btn secondary">累積の記録をリセット</button>
-    </div>
-  </aside>
 </div>
-
 <script>
-/************** 共通ユーティリティ **************/
-const shuffle=(a)=>{const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
-const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-const pctTxt=(n)=> (isNaN(n)?"—":`${(n*100).toFixed(0)}%`);
-const preload=(srcs=[])=>srcs.forEach(s=>{const i=new Image();i.src=s});
-
-/************** ストレージ（累積成績） **************/
-const STORAGE_KEY='gh_quiz_stats_v2_json';
-function loadStats(){const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return{total:{correct:0,trials:0},perItem:{}};try{return JSON.parse(raw)}catch{return{total:{correct:0,trials:0},perItem:{}}}}
-function saveStats(s){localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}
-function bump(s,id,isCorrect){s.total.trials+=1;if(isCorrect)s.total.correct+=1;if(!s.perItem[id])s.perItem[id]={correct:0,trials:0};s.perItem[id].trials+=1;if(isCorrect)s.perItem[id].correct+=1;saveStats(s)}
-
-/************** 状態 **************/
-let allQuestions=[]; let deck=[]; let step=0; let locked=false; let session={correct:0,trials:0}; let stats=loadStats();
-
-/************** DOM **************/
-const progressPill=document.getElementById('progressPill');
-const topicPill=document.getElementById('topicPill');
-const diffPill=document.getElementById('diffPill');
-const qTitle=document.getElementById('qTitle');
-const qImg=document.getElementById('qImg');
-const choicesBox=document.getElementById('choices');
-const explainBox=document.getElementById('explain');
-const nextBtn=document.getElementById('nextBtn');
-const skipBtn=document.getElementById('skipBtn');
-const sessionAcc=document.getElementById('sessionAcc');
-const sessionBar=document.getElementById('sessionBar');
-const globalAcc=document.getElementById('globalAcc');
-const globalBar=document.getElementById('globalBar');
-const perItemTbody=document.querySelector('#perItem tbody');
-const qCount=document.getElementById('qCount');
-const filterDiff=document.getElementById('filterDiff');
-const modeSel=document.getElementById('mode');
-const kbHelpToggle=document.getElementById('kbHelpToggle');
-const kbHelp=document.getElementById('kbHelp');
-const applyBtn=document.getElementById('applyBtn');
-const appsBox=document.getElementById('apps');
-const appsList=document.getElementById('appsList');
-
-/************** 画面更新 **************/
-function updateKPI(){
-  const sAcc=session.trials?session.correct/session.trials:NaN;
-  const gAcc=stats.total.trials?stats.total.correct/stats.total.trials:NaN;
-  sessionAcc.textContent=pctTxt(sAcc); globalAcc.textContent=pctTxt(gAcc);
-  sessionBar.style.width=`${clamp((sAcc||0),0,1)*100}%`;
-  globalBar.style.width =`${clamp((gAcc||0),0,1)*100}%`;
-  perItemTbody.innerHTML='';
-  allQuestions.forEach(q=>{
-    const r=stats.perItem[q.id]||{correct:0,trials:0};
-    const acc=r.trials?(r.correct/r.trials):NaN;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${q.id}</td><td>${r.correct} / ${r.trials}</td><td>${r.trials?`<span class="mini-pill">${(acc*100).toFixed(0)}%</span>`:'—'}</td>`;
-    perItemTbody.appendChild(tr);
-  })
-}
-
-function render(){
-  updateKPI();
-  const q=deck[step];
-  if(!q){
-    qTitle.textContent='✅ 終了！おつかれさま。';
-    qImg.style.display='none'; choicesBox.innerHTML='';
-    explainBox.textContent=`今回の成績：${session.correct} / ${session.trials}（${pctTxt(session.correct/session.trials)}）`;
-    appsBox.style.display='none'; nextBtn.disabled=true; skipBtn.disabled=true;
-    progressPill.textContent='完了'; topicPill.textContent=`全 ${deck.length} 問`; diffPill.textContent='Lv —';
-    return;
-  }
-  progressPill.textContent=`Q ${step+1} / ${deck.length}`;
-  topicPill.textContent=q.id; diffPill.textContent=`Lv ${q.level||'-'}`;
-  qTitle.textContent=q.title;
-  if(q.img){ qImg.src=q.img; qImg.style.display='block'; } else { qImg.style.display='none'; }
-  const randomized=shuffle(q.choices); // ★ 選択肢を毎回シャッフル
-  choicesBox.innerHTML=''; explainBox.textContent=''; appsBox.style.display='none'; appsList.innerHTML=''; nextBtn.disabled=true; locked=false;
-  randomized.forEach((text,idx)=>{
-    const btn=document.createElement('button');
-    btn.className='choice'; btn.type='button'; btn.textContent=text; btn.dataset.index=idx+1;
-    btn.addEventListener('click',()=>onAnswer(q,text,btn));
-    choicesBox.appendChild(btn);
-  });
-}
-
-function onAnswer(q,selectedText,node){
-  if(locked) return; locked=true;
-  const isCorrect=(selectedText===q.correct);
-  session.trials+=1; if(isCorrect) session.correct+=1; bump(stats,q.id,isCorrect);
-  [...document.querySelectorAll('.choice')].forEach(n=>{ if(n.textContent===q.correct) n.classList.add('correct'); if(n===node && !isCorrect) n.classList.add('wrong'); n.disabled=true; });
-  explainBox.innerHTML=(isCorrect?'✅ 正解！':`❌ 不正解。正解：「${q.correct}」`)+"\n"+(q.explain||'');
-  if(isCorrect && Array.isArray(q.apps) && q.apps.length){
-    appsList.innerHTML='';
-    q.apps.forEach(a=>{ const row=document.createElement('div'); row.className='apps-item'; const im=document.createElement('img'); im.src=a.img; im.alt=`${q.id} usecase`; const p=document.createElement('p'); p.textContent=a.text||''; row.appendChild(im); row.appendChild(p); appsList.appendChild(row); });
-    appsBox.style.display='block';
-  }
-  nextBtn.disabled=false; updateKPI();
-}
-
-/************** デッキ構築 **************/
-function buildDeck(){
-  const count=clamp(parseInt(qCount.value,10)||10,5,30);
-  const diff=filterDiff.value; // 'all'|'1'|'2'|'3'
-  let pool=allQuestions.filter(q=> diff==='all'?true:String(q.level)===diff);
-  const mode=modeSel.value; // normal|weak|shuffle
-  if(mode==='weak'){
-    pool = pool.slice().sort((a,b)=>{
-      const ra=stats.perItem[a.id]||{correct:0,trials:0};
-      const rb=stats.perItem[b.id]||{correct:0,trials:0};
-      const aa=ra.trials? ra.correct/ra.trials : 0;
-      const bb=rb.trials? rb.correct/rb.trials : 0;
-      return aa-bb; // 低い順
-    });
-  } else if(mode==='shuffle'){
-    pool = shuffle(pool);
-  }
-  preload(pool.map(p=>p.img).concat(pool.flatMap(p=> (p.apps||[]).map(a=>a.img) )));
-  deck=pool.slice(0,count); step=0; session={correct:0,trials:0}; nextBtn.disabled=true; skipBtn.disabled=false; render();
-}
-
-/************** 操作系 **************/
-nextBtn.addEventListener('click',()=>{ step+=1; render(); });
-skipBtn.addEventListener('click',()=>{ const q=deck[step]; session.trials+=1; bump(stats,q.id,false); step+=1; render(); });
-qCount.addEventListener('change', ()=>{ /* no-op */ });
-applyBtn.addEventListener('click', buildDeck);
-kbHelpToggle.addEventListener('change',e=>{ kbHelp.style.display=e.target.checked?'block':'none'; });
-document.getElementById('resetSession').addEventListener('click',()=>{ session={correct:0,trials:0}; updateKPI(); });
-document.getElementById('resetGlobal').addEventListener('click',()=>{ stats={ total:{correct:0,trials:0}, perItem:{} }; saveStats(stats); updateKPI(); });
-window.addEventListener('keydown',(ev)=>{
-  const k=ev.key.toLowerCase();
-  if(k>='1' && k<='9'){
-    const idx=parseInt(k,10); const btn=document.querySelector(`.choice[data-index="${idx}"]`); if(btn) btn.click();
-  } else if(k==='n'){ if(!nextBtn.disabled) nextBtn.click(); }
-  else if(k==='s'){ skipBtn.click(); }
-  else if(k==='r'){ document.getElementById('resetSession').click(); }
-});
-
-/************** JSON 読み込み **************/
+let questions=[];let index=0;let correct=0;
 async function loadQuestions(){
-  try{
-    const res=await fetch('questions.json?v=20251110', {cache:'no-store'});
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    allQuestions=await res.json();
-    // 初期レンダリング
-    buildDeck();
-  }catch(e){
-    qTitle.textContent='❌ questions.json を読み込めません：'+e.message+"\n（GitHub Pages または localhost から開いてください）";
-  }
-}
-
-loadQuestions();
+  try{const res=await fetch('questions.json?v=20251110');questions=await res.json();startQuiz();}
+  catch(e){document.getElementById('qTitle').textContent='❌ questions.json を読み込めません';}}
+function startQuiz(){index=0;correct=0;renderQuestion();}
+function renderQuestion(){
+  const q=questions[index];
+  const qTitle=document.getElementById('qTitle');
+  const qImg=document.getElementById('qImg');
+  const choicesBox=document.getElementById('choices');
+  const explain=document.getElementById('explain');
+  const apps=document.getElementById('apps');
+  const appsList=document.getElementById('appsList');
+  qTitle.textContent=q.title;
+  if(q.img){qImg.src=q.img;qImg.style.display='block';}else{qImg.style.display='none';}
+  choicesBox.innerHTML='';
+  q.choices.forEach(c=>{
+    const b=document.createElement('button');b.className='choice';b.textContent=c;
+    b.onclick=()=>{
+      const isC=c===q.correct;if(isC)correct++;
+      document.querySelectorAll('.choice').forEach(x=>x.disabled=true);
+      b.classList.add(isC?'correct':'wrong');
+      explain.innerHTML=(isC?'✅ 正解！':'❌ 不正解')+'<br>'+q.explain;
+      if(isC&&q.apps){apps.style.display='block';appsList.innerHTML='';q.apps.forEach(a=>{const row=document.createElement('div');row.className='apps-item';row.innerHTML=`<img src="${a.img}"><p>${a.text}</p>`;appsList.appendChild(row);});}
+      document.getElementById('nextBtn').disabled=false;};choicesBox.appendChild(b);});
+  explain.textContent='';apps.style.display='none';document.getElementById('nextBtn').disabled=true;}
+document.getElementById('nextBtn').onclick=()=>{index++;if(index<questions.length){renderQuestion();}else{document.getElementById('qTitle').textContent='✅ 終了！';document.getElementById('choices').innerHTML='';document.getElementById('qImg').style.display='none';document.getElementById('explain').textContent=`成績：${correct}/${questions.length}`;document.getElementById('apps').style.display='none';}};loadQuestions();
 </script>
 </body>
 </html>
