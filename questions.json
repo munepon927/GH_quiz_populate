@@ -1,0 +1,173 @@
+[
+  {
+    "id": "populate_geometry",
+    "level": 2,
+    "title": "ジオメトリに点群を作成するコンポーネントはなにか？",
+    "img": "assets/populate_geometry.png",
+    "correct": "Populate Geometry",
+    "choices": [
+      "Populate Geometry",
+      "Divide Curve",
+      "Random Reduce",
+      "Point XYZ"
+    ],
+    "explain": "指定したジオメトリ（Brep/Surface/Region）内部にランダムな点群を生成します。",
+    "apps": [
+      { "img": "apps/populate_geometry_01.png", "text": "Point In Brep と Cull Pattern を組み合わせ、Brep 内部の点だけを抽出して後段の配列・サンプリングに活用。" }
+    ]
+  },
+  {
+    "id": "reposition_to_point",
+    "level": 1,
+    "title": "point にジオメトリを再配置する方法を2つ挙げよ。",
+    "img": "assets/reposition_to_point.png",
+    "correct": "Move と Orient",
+    "choices": [
+      "Move と Orient",
+      "Rotate と Scale",
+      "Align Plane と Evaluate Curve",
+      "Remap Numbers と Construct Domain"
+    ],
+    "explain": "位置合わせのみなら Move、基準平面からターゲット平面へ姿勢も含めて合わせるなら Orient を使います。",
+    "apps": [
+      { "img": "apps/reposition_to_point_01.png", "text": "Divide Curve の点へ Move でインスタンス配置（姿勢は維持）。" },
+      { "img": "apps/reposition_to_point_02.png", "text": "Perp Frame をターゲットにして Orient で姿勢込みの貼り付け。" }
+    ]
+  },
+  {
+    "id": "reorient_on_point",
+    "level": 2,
+    "title": "point 上に配置したジオメトリの向きを変える方法を2つ挙げよ。",
+    "img": "assets/reorient_on_point.png",
+    "correct": "Align Plane と Rotate",
+    "choices": [
+      "Align Plane と Rotate",
+      "Move と Scale",
+      "Weave と Dispatch",
+      "Closest Point と Area"
+    ],
+    "explain": "Align Plane で参照ベクトル方向へ面を整列し、Rotate で角度を与えて向きを調整します。",
+    "apps": [
+      { "img": "apps/reorient_on_point_01.png", "text": "アトラクター方向へ Align Plane、さらに Rotate で扇状に展開。" }
+    ]
+  },
+  {
+    "id": "align_plane_D_input",
+    "level": 1,
+    "title": "Align Plane の入力 D の意味を答えよ。",
+    "img": "assets/align_plane.png",
+    "correct": "Direction",
+    "choices": [
+      "Direction",
+      "Distance",
+      "Domain",
+      "Dimension"
+    ],
+    "explain": "D は Direction（方向）。向きを決めるためにベクトルを作成して入力する必要があります（Unit X/Y/Z や Vector 2Pt など）。",
+    "apps": [
+      { "img": "apps/align_plane_D_input_01.png", "text": "Vector 2Pt でアトラクター→点のベクトルを作成し、D に入れて一括整列。" }
+    ]
+  },
+  {
+    "id": "flow_along_curve",
+    "level": 3,
+    "title": "ジオメトリを、ベースカーブとターゲットカーブを参考に変形させるコンポーネントは何か？",
+    "img": "assets/flow.png",
+    "correct": "Flow",
+    "choices": [
+      "Flow",
+      "Sporph",
+      "Surface Morph",
+      "Map To Surface"
+    ],
+    "explain": "Flow はベースカーブ→ターゲットカーブの対応に基づき、ジオメトリを曲げながら写像します（長さ差や端の対応に注意）。",
+    "apps": [
+      { "img": "apps/flow_along_curve_01.png", "text": "直線上のパターンを自由曲線へ沿わせて曲げる（看板やモールの追従）。" }
+    ]
+  },
+  {
+    "id": "weave_reorder",
+    "level": 2,
+    "title": "入力されたデータを、指定されたパターンに沿って組み替えるコンポーネントはなにか？",
+    "img": "assets/weave.png",
+    "correct": "Weave",
+    "choices": [
+      "Weave",
+      "Weaverbird",
+      "Merge",
+      "Entwine"
+    ],
+    "explain": "Weave は複数の入力をパターンに従って交互に並べ直すツール。データツリー整形や配列の交互選択に有効です。",
+    "apps": [
+      { "img": "apps/weave_reorder_01.png", "text": "A/B のパーツを交互に並べる、偶奇で素材を切り替える等のルーティング。" }
+    ]
+  },
+  {
+    "id": "attractor_remap_triplet",
+    "level": 2,
+    "title": "アトラクターからの各点の距離を拡縮/回転などに使いたい。距離情報を別の数値に再配置するための3つのコンポーネントの組み合わせは？",
+    "img": "assets/remap_triplet.png",
+    "correct": "Bounds + Construct Domain + Remap Numbers",
+    "choices": [
+      "Bounds + Construct Domain + Remap Numbers",
+      "Evaluate Curve + Graph Mapper + Rotate",
+      "Area + Scale + Move",
+      "Dispatch + Weave + Cull Pattern"
+    ],
+    "explain": "距離の最小最大を Bounds で取得し、その範囲（Domain）を Construct Domain で定義、Remap Numbers で目的レンジへ線形変換します。",
+    "apps": [
+      { "img": "apps/attractor_remap_triplet_01.png", "text": "距離→スケール係数や回転角へ変換して、点ごとにサイズ/向きを変化。" }
+    ]
+  },
+  {
+    "id": "curve_closest_point",
+    "level": 1,
+    "title": "曲線とその周辺にある point の最短距離を求めるコンポーネントは？",
+    "img": "assets/curve_closest_point.png",
+    "correct": "Curve Closest Point",
+    "choices": [
+      "Curve Closest Point",
+      "Closest Points",
+      "Evaluate Curve",
+      "Project"
+    ],
+    "explain": "Curve Closest Point は任意の点に対し、曲線上の最短点・最短距離・パラメータ t を返します。t は曲線のパラメトリック位置で、Evaluate Curve に渡すことで対応する点/接線などを取得できます。",
+    "apps": [
+      { "img": "apps/curve_closest_point_01.png", "text": "t を Evaluate Curve へ入れて、最短点の接線ベクトルを利用した配向処理へ。" }
+    ]
+  },
+  {
+    "id": "polyline_from_points",
+    "level": 1,
+    "title": "point list を使って曲線を描くコンポーネントを2つ選べ。",
+    "img": "assets/curve_from_points.png",
+    "correct": "Interpolate と Nurbs Curve",
+    "choices": [
+      "Interpolate と Nurbs Curve",
+      "Polyline と Line SDL",
+      "PLine と Fit Line",
+      "Bezier Span と Circle CNR"
+    ],
+    "explain": "点列から滑らかな曲線を得るなら Interpolate（挿入）や Nurbs Curve。Boolean Toggle を使って `Closed` を切り替えれば、開放/閉ループを選べます。",
+    "apps": [
+      { "img": "apps/polyline_from_points_01.png", "text": "点列→Interpolate（Closed=Toggle）で外形を閉じたり開いたり切替。" }
+    ]
+  },
+  {
+    "id": "deconstruct_brep",
+    "level": 1,
+    "title": "Brep を分解して、立体を構成する要素を抽出するためのコンポーネントを答えよ。",
+    "img": "assets/deconstruct_brep.png",
+    "correct": "Deconstruct Brep",
+    "choices": [
+      "Deconstruct Brep",
+      "Explode",
+      "Deconstruct Mesh",
+      "Brep Edges"
+    ],
+    "explain": "Brep を Faces / Edges / Vertices に分解します。後続で面の法線検査、辺の抽出、頂点群の解析などへ展開可能。",
+    "apps": [
+      { "img": "apps/deconstruct_brep_01.png", "text": "Faces/Edges/Vertices を個別に処理して、面の再モデリングやエッジ抽出に活用。" }
+    ]
+  }
+]
