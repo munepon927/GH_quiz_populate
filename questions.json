@@ -30,8 +30,8 @@
     ],
     "explain": "位置合わせのみなら Move、基準平面からターゲット平面へ姿勢も含めて合わせるなら Orient を使います。",
     "apps": [
-      { "img": "apps/reposition_to_point_01.png", "text": "Divide Curve の点へ Move でインスタンス配置（姿勢は維持）。" },
-      { "img": "apps/reposition_to_point_02.png", "text": "Perp Frame をターゲットにして Orient で姿勢込みの貼り付け。" }
+      { "img": "apps/reposition_to_point_01.png", "text": "Populate geometry の点へ Move でインスタンス配置（姿勢は維持）。" },
+      { "img": "apps/reposition_to_point_02.png", "text": "Plane をターゲットにして Orient で姿勢込みの貼り付け。" }
     ]
   },
   {
@@ -48,7 +48,7 @@
     ],
     "explain": "Align Plane で参照ベクトル方向へ面を整列し、Rotate で角度を与えて向きを調整します。",
     "apps": [
-      { "img": "apps/reorient_on_point_01.png", "text": "アトラクター方向へ Align Plane、さらに Rotate で扇状に展開。" }
+      { "img": "apps/reorient_on_point_01.png", "text": "ベクトルを使って Align Plane、さらに Rotate で姿勢制御。" }
     ]
   },
   {
@@ -171,3 +171,4 @@
     ]
   }
 ]
+
